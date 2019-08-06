@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '2.0.0'
+}
+
+group 'io.trofiv'
+version '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+jacocoTestReport {
+    reports {
+        //noinspection GroovyAssignabilityCheck
+        xml.enabled false
+        //noinspection GroovyAssignabilityCheck
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'io.trofiv.revolut.Application'
+    }
+    from {
+        configurations.compile.collect { it.directory ? it : zipTree(it) }
+    }
+}
+
+final def jacksonVersion = '2.9.8'
+final def javalinVersion = '3.3.0'
+final def guiceVersion = '4.2.2'
+final def slf4jVersion = '1.7.26'
+final def log4jVersion = '2.12.0'
+final def hikariCpVersion = '3.3.1'
+final def h2dbVersion = '1.4.199'
+final def guavaVersion = '28.0-jre'
+final def commonsLang3Version = '3.9'
+final def throwingFuncVersion = '1.5.0'
+final def jbAnnotationsVersion = '17.0.0'
+final def httpClientVersion = '4.1.4'
+final def commonsIOVersion = '2.6'
+final def junitVersion = '5.5.1'
+final def hamcrestVersion = '1.3'
+final def awaitilityVersion = '3.1.6'
+
+dependencies {
+    compile group: 'io.javalin', name: 'javalin', version: javalinVersion
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: jacksonVersion
+    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4jVersion
+    compile group: 'com.google.inject', name: 'guice', version: guiceVersion
+    compile group: 'com.zaxxer', name: 'HikariCP', version: hikariCpVersion
+    compile group: 'com.h2database', name: 'h2', version: h2dbVersion
+    compile group: 'com.google.guava', name: 'guava', version: guavaVersion
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+    compile group: 'com.pivovarit', name: 'throwing-function', version: throwingFuncVersion
+    compile group: 'org.jetbrains', name: 'annotations', version: jbAnnotationsVersion
+    testCompile group: 'org.apache.httpcomponents', name: 'httpasyncclient', version: httpClientVersion
+    testCompile group: 'commons-io', name: 'commons-io', version: commonsIOVersion
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion
+    testCompile group: 'org.awaitility', name: 'awaitility', version: awaitilityVersion
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: junitVersion
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        //noinspection GrUnresolvedAccess
+        events "passed", "skipped", "failed"
+    }
+}
